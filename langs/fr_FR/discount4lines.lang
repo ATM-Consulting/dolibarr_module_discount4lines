@@ -1,0 +1,17 @@
+
+#
+# Generic
+#
+
+# Module label 'ModuleXXXName'
+# (where XXX is value of numeric property 'numero' of module)
+Module500000Name = Discount4Lines
+# Module description 'ModuleXXXDesc'
+# (where XXX is value of numeric property 'numero' of module)
+Module500000Desc = Apply discount on lines of propale, order and invoice
+
+
+BtnDiscount4Lines = Remise sur lignes
+ApplyDiscount4linesTitle = Appliquer une remise sur les lignes
+EnterDiscountToApplyToEachLines = Saisir le pourcentage à appliquer sur chaque ligne
+Discount4linesApplied = Remise appliquée sur %s lignes

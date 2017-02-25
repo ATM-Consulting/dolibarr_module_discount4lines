@@ -1,0 +1,5 @@
+
+BtnDiscount4Lines = Discount on lines
+ApplyDiscount4linesTitle = Apply discount onto lines
+EnterDiscountToApplyToEachLines = Enter percentage to apply to each line
+Discount4linesApplied = Discount successfully applied : %s
