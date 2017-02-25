@@ -1,4 +1,11 @@
 
+#
+# Generic
+#
+
+Module110302Name = Discount4Lines
+Module110302Desc = Apply discount on lines of propale and invoice
+
 BtnDiscount4Lines = Discount on lines
 ApplyDiscount4linesTitle = Apply discount onto lines
 EnterDiscountToApplyToEachLines = Enter percentage to apply to each line

@@ -1,7 +1,7 @@
 Dolibarr Module Discount4Lines
 ========================================
 
-This module for Dolibarr ERP/CRM allows you to apply a discount percentage onto lines of propale, order and invoices.
+This module for Dolibarr ERP/CRM allows you to apply a discount percentage onto lines of propale and invoices.
 
 
 Install
