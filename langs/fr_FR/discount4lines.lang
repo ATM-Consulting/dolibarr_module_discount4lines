@@ -3,13 +3,8 @@
 # Generic
 #
 
-# Module label 'ModuleXXXName'
-# (where XXX is value of numeric property 'numero' of module)
-Module500000Name = Discount4Lines
-# Module description 'ModuleXXXDesc'
-# (where XXX is value of numeric property 'numero' of module)
-Module500000Desc = Apply discount on lines of propale, order and invoice
-
+Module110302Name = Discount4Lines
+Module110302Desc = Appliquer un pourcentage de remise sur les lignes de propositions commerciales et factures.
 
 BtnDiscount4Lines = Remise sur lignes
 ApplyDiscount4linesTitle = Appliquer une remise sur les lignes
