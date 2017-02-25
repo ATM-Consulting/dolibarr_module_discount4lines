@@ -92,7 +92,7 @@ class ActionsDiscount4lines
 						$remise_percent = GETPOST('amount_discount4lines','int');
 						if($line->total_ht > 0) {
 							
-							if(in_array('ordercard',$contexts)) {
+							if(in_array('propalecard',$contexts)) {
 							
 								$res = $object->updateline(
 									$line->id,
