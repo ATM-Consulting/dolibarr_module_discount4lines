@@ -27,7 +27,7 @@ class ActionsDiscount4lines
 
 		$contexts = explode(':',$parameters['context']);
 
-		if(in_array('ordercard',$contexts) || in_array('propalcard',$contexts) || in_array('invoicecard',$contexts)) {
+		if(in_array('propalcard',$contexts) || in_array('invoicecard',$contexts)) {
 
 			if ($object->statut == 0  && $user->rights->{$object->element}->creer) {
 				
@@ -79,7 +79,7 @@ class ActionsDiscount4lines
 	
 		$contexts = explode(':',$parameters['context']);
 	
-		if(in_array('ordercard',$contexts) || in_array('propalcard',$contexts) || in_array('invoicecard',$contexts)) {
+		if( in_array('propalcard',$contexts) || in_array('invoicecard',$contexts)) {
 	
 			if ($object->statut == 0  && $user->rights->{$object->element}->creer) {
 				
