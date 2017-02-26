@@ -167,20 +167,19 @@ class ActionsDiscount4lines
 		
 		global $langs,$db,$user, $conf;
 		
-		$out = '<div class="inline-block divButAction"><a class="butAction" href="' . $_SERVER["PHP_SELF"] . '?id=' . $object->id . '&amp;action=ask_discount4lines">' . $langs->trans('BtnDiscount4Lines') . '</a></div>';
+		$contexts = explode(':',$parameters['context']);
 		
+		if( in_array('propalcard',$contexts) || in_array('invoicecard',$contexts)) {
 		
-		if (! $error)
-		{
-			$this->results = array();
-			$this->resprints = $out;
-			print $out;
-			return 0; // or return 1 to replace standard code
-		}
-		else
-		{
-			$this->errors[] = 'Error message';
-			return -1;
-		}
+			if ($object->statut == 0  && $user->rights->{$object->element}->creer) {
+		
+				$out = '<div class="inline-block divButAction"><a class="butAction" href="' . $_SERVER["PHP_SELF"] . '?id=' . $object->id . '&amp;action=ask_discount4lines">' . $langs->trans('BtnDiscount4Lines') . '</a></div>';
+			
+				$this->results = array();
+				$this->resprints = $out;
+				print $out;
+				return 0; // or return 1 to replace standard code
+			}
+		}	
 	}
 }
