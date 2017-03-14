@@ -82,17 +82,17 @@ class ActionsDiscount4lines
 		if( in_array('propalcard',$contexts) || in_array('invoicecard',$contexts)) {
 	
 			if ($object->statut == 0  && $user->rights->{$object->element}->creer) {
-				
 				if($action == 'discount4lines') {
 					
 					$countLineUpdated = 0;
 					$err = 0;
 					
 					foreach($object->lines as $line) {
+						
 						$remise_percent = GETPOST('amount_discount4lines','int');
 						if($line->total_ht > 0) {
 							
-							if(in_array('propalecard',$contexts)) {
+							if(in_array('propalcard',$contexts)) {
 							
 								$res = $object->updateline(
 									$line->id,
