@@ -112,66 +112,73 @@ class ActionsDiscount4lines
 					$err = 0;
 					
 					foreach($object->lines as $line) {
-						
-						$remise_percent = GETPOST('amount_discount4lines','int');
-						if($line->total_ht > 0) {
-							
-							if(in_array('propalcard',$contexts)) {
-							
-								$res = $object->updateline(
-									$line->id,
-									$line->subprice,
-									$line->qty,
-									$remise_percent,
-									$line->tva_tx,
-									$line->localtax1_tx,
-									$line->localtax2_tx,
-									$line->desc,
-									$line->price_base_type,
-									$line->infobits,
-									$line->special_code,
-									$line->fk_parent_line,
-									$line->skip_update_total,
-									$line->fk_fournprice,
-									$line->pa_ht,
-									$line->label,
-									$line->product_type,
-									$line->date_start,
-									$line->date_end,
-									$line->array_options,
-									$line->fk_unit
-								);
-							} elseif(in_array('invoicecard',$contexts)) {
-								$res = $object->updateline(
-									$line->id, 
-									$line->desc, 
-									$line->subprice, 
-									$line->qty, 
-									$remise_percent, 
-									$line->date_start, 
-									$line->date_end, 
-									$line->tva_tx, 
-									$line->localtax1_tx, 
-									$line->localtax2_tx, 
-									$line->price_base_type, 
-									$line->infobits, 
-									'', // type 
-									$line->fk_parent_line, 
-									$line->skip_update_total, 
-									$line->fk_fournprice, 
-									$line->pa_ht=0, 
-									$line->label, 
-									$line->special_code, 
-									$line->array_options,
-									$line->situation_percent,
-									$line->fk_unit
-								);
-							}
-		
-							if($res > 0) {
-								$countLineUpdated++;
-							} else {
-								$err++;
+
+						if(
+								   ($line->product_type != '0' && $line->product_type != '1')								// Si ni service, ni produit
+								|| ($line->product_type == '0' && $conf->global->DISCOUNT4LINES_APPLY_TO_PRODUCTS == '1')	// Si produit et qu'on applique la réduc sur les produits
+								|| ($line->product_type == '1' && $conf->global->DISCOUNT4LINES_APPLY_TO_SERVICES == '1')	// Si service et qu'on applique la réduc sur les services
+						)
+						{
+							$remise_percent = GETPOST('amount_discount4lines','int');
+							if($line->total_ht > 0) {
+								
+								if(in_array('propalcard',$contexts)) {
+								
+									$res = $object->updateline(
+										$line->id,
+										$line->subprice,
+										$line->qty,
+										$remise_percent,
+										$line->tva_tx,
+										$line->localtax1_tx,
+										$line->localtax2_tx,
+										$line->desc,
+										$line->price_base_type,
+										$line->infobits,
+										$line->special_code,
+										$line->fk_parent_line,
+										$line->skip_update_total,
+										$line->fk_fournprice,
+										$line->pa_ht,
+										$line->label,
+										$line->product_type,
+										$line->date_start,
+										$line->date_end,
+										$line->array_options,
+										$line->fk_unit
+									);
+								} elseif(in_array('invoicecard',$contexts)) {
+									$res = $object->updateline(
+										$line->id, 
+										$line->desc, 
+										$line->subprice, 
+										$line->qty, 
+										$remise_percent, 
+										$line->date_start, 
+										$line->date_end, 
+										$line->tva_tx, 
+										$line->localtax1_tx, 
+										$line->localtax2_tx, 
+										$line->price_base_type, 
+										$line->infobits, 
+										$line->product_type, // type
+										$line->fk_parent_line, 
+										$line->skip_update_total, 
+										$line->fk_fournprice, 
+										$line->pa_ht=0, 
+										$line->label, 
+										$line->special_code, 
+										$line->array_options,
+										$line->situation_percent,
+										$line->fk_unit
+									);
+								}
+			
+								if($res > 0) {
+									$countLineUpdated++;
+								} else {
+									$err++;
+								}
 							}
 						}
 					}
