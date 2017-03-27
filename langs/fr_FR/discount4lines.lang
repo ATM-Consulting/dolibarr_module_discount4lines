@@ -13,5 +13,5 @@ Discount4linesApplied = Remise appliquée sur %s lignes
 
 #Conf
 discount4linesSetup = Configuration du module Discount4Lines
-APPLY_TO_PRODUCTS=Appliquer aux lignes produit
-APPLY_TO_SERVICES=Appliquer aux lignes services
+APPLY_TO_PRODUCTS=Appliquer la remise aux lignes produits
+APPLY_TO_SERVICES=Appliquer la remise aux lignes services

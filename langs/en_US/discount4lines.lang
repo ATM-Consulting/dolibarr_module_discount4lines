@@ -13,5 +13,5 @@ Discount4linesApplied = Discount successfully applied : %s
 
 #Conf
 discount4linesSetup = Discount4Lines module setup
-APPLY_TO_PRODUCTS=Apply to product lines
-APPLY_TO_SERVICES=Apply to service lines
+APPLY_TO_PRODUCTS=Apply discount to product lines
+APPLY_TO_SERVICES=Apply discount to service lines

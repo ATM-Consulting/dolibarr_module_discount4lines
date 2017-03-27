@@ -51,7 +51,7 @@ class ActionsDiscount4lines
 
 		$contexts = explode(':',$parameters['context']);
 
-		if(in_array('propalcard',$contexts) || in_array('invoicecard',$contexts)) {
+		if(in_array('propalcard',$contexts) || in_array('invoicecard',$contexts) || in_array('ordercard',$contexts)) {
 
 			if ($object->statut == 0  && $user->rights->{$object->element}->creer) {
 				
@@ -103,7 +103,7 @@ class ActionsDiscount4lines
 	
 		$contexts = explode(':',$parameters['context']);
 	
-		if( in_array('propalcard',$contexts) || in_array('invoicecard',$contexts)) {
+		if( in_array('propalcard',$contexts) || in_array('invoicecard',$contexts) || in_array('ordercard', $contexts)) {
 	
 			if ($object->statut == 0  && $user->rights->{$object->element}->creer) {
 				if($action == 'discount4lines') {
@@ -172,6 +172,30 @@ class ActionsDiscount4lines
 										$line->situation_percent,
 										$line->fk_unit
 									);
+								} elseif(in_array('ordercard', $contexts)) {
+									$res = $object->updateline(
+										$line->rowid,
+										$line->desc,
+										$line->subprice,
+										$line->qty,
+										$remise_percent,
+										$line->tva_tx,
+										$line->localtax1_tx,
+										$line->localtax2_tx,
+										'HT',
+										$line->info_bits,
+										$line->date_start,
+										$line->date_end,
+										$line->product_type,
+										$line->fk_parent_line,
+										$line->skip_update_total,
+										$line->fk_fournprice,
+										$line->pa_ht,
+										$line->label,
+										$line->special_code,
+										$line->array_options,
+										$line->fk_unit
+									);
 								}
 			
 								if($res > 0) {
@@ -200,7 +224,7 @@ class ActionsDiscount4lines
 		
 		$contexts = explode(':',$parameters['context']);
 		
-		if( in_array('propalcard',$contexts) || in_array('invoicecard',$contexts)) {
+		if( in_array('propalcard',$contexts) || in_array('invoicecard',$contexts) || in_array('ordercard',$contexts)) {
 		
 			if ($object->statut == 0  && $user->rights->{$object->element}->creer) {
 		
