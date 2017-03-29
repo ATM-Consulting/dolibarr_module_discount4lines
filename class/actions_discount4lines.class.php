@@ -51,9 +51,12 @@ class ActionsDiscount4lines
 
 		$contexts = explode(':',$parameters['context']);
 
-		if(in_array('propalcard',$contexts) || in_array('invoicecard',$contexts) || in_array('ordercard',$contexts)) {
-
-			if ($object->statut == 0  && $user->rights->{$object->element}->creer) {
+		if(in_array('propalcard',$contexts) || in_array('invoicecard',$contexts) || in_array('ordercard',$contexts) || in_array('ordersuppliercard', $contexts)) {
+			
+			$userHasRights = ! empty($user->rights->{$object->element}->creer);
+			if ($object->element == 'order_supplier') $userHasRights = ! empty($user->rights->fournisseur->commande->creer);
+			
+			if ($object->statut == 0  && $userHasRights) {
 				
 				if($action == 'ask_discount4lines') {
 					$form = new Form($this->db);
@@ -102,17 +105,18 @@ class ActionsDiscount4lines
 		$langs->load('discount4lines@discount4lines');
 	
 		$contexts = explode(':',$parameters['context']);
-	
-		if( in_array('propalcard',$contexts) || in_array('invoicecard',$contexts) || in_array('ordercard', $contexts)) {
-	
-			if ($object->statut == 0  && $user->rights->{$object->element}->creer) {
+		if( in_array('propalcard',$contexts) || in_array('invoicecard',$contexts) || in_array('ordercard', $contexts) || in_array('ordersuppliercard', $contexts)) {
+
+			$userHasRights = ! empty($user->rights->{$object->element}->creer);
+			if ($object->element == 'order_supplier') $userHasRights = ! empty($user->rights->fournisseur->commande->creer);
+
+			if ($object->statut == 0  && $userHasRights) {
 				if($action == 'discount4lines') {
 					
 					$countLineUpdated = 0;
 					$err = 0;
 					
 					foreach($object->lines as $line) {
-
 						if(
 								   ($line->product_type != '0' && $line->product_type != '1')								// Si ni service, ni produit
 								|| ($line->product_type == '0' && $conf->global->DISCOUNT4LINES_APPLY_TO_PRODUCTS == '1')	// Si produit et qu'on applique la réduc sur les produits
@@ -196,6 +200,25 @@ class ActionsDiscount4lines
 										$line->array_options,
 										$line->fk_unit
 									);
+								} elseif(in_array('ordersuppliercard', $contexts)) {
+									$res = $object->updateline(
+										$line->id,
+										$line->desc,
+										$line->pu_ht,
+										$line->qty,
+										$remise_percent,
+										$line->tva_tx,
+										$line->localtax1_tx,
+										$line->localtax2_tx,
+										'HT',
+										$line->info_bits,
+										$line->product_type,
+										true,
+										$line->date_start,
+										$line->date_end,
+										$line->array_options,
+										$line->fk_unit
+									);
 								}
 			
 								if($res > 0) {
@@ -206,9 +229,15 @@ class ActionsDiscount4lines
 							}
 						}
 					}
-					
+
 					if($countLineUpdated > 0) {
 						setEventMessage($langs->trans('Discount4linesApplied', $countLineUpdated));
+					}
+					
+					// Si commande fournisseur, il n'y a pas de redirection, donc l'affichage des lignes n'est pas mis à jour : on redirige
+					if(in_array('ordersuppliercard', $contexts)) {
+						header("Location: ".$_SERVER['PHP_SELF']."?id=".$object->id);
+						exit;
 					}
 				}
 			}
@@ -224,9 +253,12 @@ class ActionsDiscount4lines
 		
 		$contexts = explode(':',$parameters['context']);
 		
-		if( in_array('propalcard',$contexts) || in_array('invoicecard',$contexts) || in_array('ordercard',$contexts)) {
-		
-			if ($object->statut == 0  && $user->rights->{$object->element}->creer) {
+		if( in_array('propalcard',$contexts) || in_array('invoicecard',$contexts) || in_array('ordercard',$contexts) || in_array('ordersuppliercard', $contexts)) {
+
+			$userHasRights = ! empty($user->rights->{$object->element}->creer);
+			if ($object->element == 'order_supplier') $userHasRights = ! empty($user->rights->fournisseur->commande->creer);
+				
+			if ($object->statut == 0  && $userHasRights) {
 		
 				$out = '<div class="inline-block divButAction"><a class="butAction" href="' . $_SERVER["PHP_SELF"] . '?id=' . $object->id . '&amp;action=ask_discount4lines">' . $langs->trans('BtnDiscount4Lines') . '</a></div>';
 			
