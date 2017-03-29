@@ -51,10 +51,11 @@ class ActionsDiscount4lines
 
 		$contexts = explode(':',$parameters['context']);
 
-		if(in_array('propalcard',$contexts) || in_array('invoicecard',$contexts) || in_array('ordercard',$contexts) || in_array('ordersuppliercard', $contexts)) {
+		if(in_array('propalcard',$contexts) || in_array('invoicecard',$contexts) || in_array('ordercard',$contexts) || in_array('ordersuppliercard', $contexts) || in_array('invoicesuppliercard', $contexts)) {
 			
 			$userHasRights = ! empty($user->rights->{$object->element}->creer);
 			if ($object->element == 'order_supplier') $userHasRights = ! empty($user->rights->fournisseur->commande->creer);
+			if ($object->element == 'invoice_supplier') $userHasRights = ! empty($user->rights->fournisseur->facture->creer);
 			
 			if ($object->statut == 0  && $userHasRights) {
 				
@@ -105,10 +106,11 @@ class ActionsDiscount4lines
 		$langs->load('discount4lines@discount4lines');
 	
 		$contexts = explode(':',$parameters['context']);
-		if( in_array('propalcard',$contexts) || in_array('invoicecard',$contexts) || in_array('ordercard', $contexts) || in_array('ordersuppliercard', $contexts)) {
+		if( in_array('propalcard',$contexts) || in_array('invoicecard',$contexts) || in_array('ordercard', $contexts) || in_array('ordersuppliercard', $contexts) || in_array('invoicesuppliercard', $contexts)) {
 
 			$userHasRights = ! empty($user->rights->{$object->element}->creer);
 			if ($object->element == 'order_supplier') $userHasRights = ! empty($user->rights->fournisseur->commande->creer);
+			if ($object->element == 'invoice_supplier') $userHasRights = ! empty($user->rights->fournisseur->facture->creer);
 
 			if ($object->statut == 0  && $userHasRights) {
 				if($action == 'discount4lines') {
@@ -213,14 +215,34 @@ class ActionsDiscount4lines
 										'HT',
 										$line->info_bits,
 										$line->product_type,
-										true,
+										false,
 										$line->date_start,
 										$line->date_end,
 										$line->array_options,
 										$line->fk_unit
 									);
+								} elseif(in_array('invoicesuppliercard', $contexts)) {
+									$res = $object->updateline(
+										$line->id,
+										$line->description,
+										$line->pu_ht,
+										$line->tva_tx,
+										$line->localtax1_tx,
+										$line->localtax2_tx,
+										$line->qty,
+										$line->fk_product,
+										'HT',
+										$line->info_bits,
+										$line->product_type,
+										$remise_percent,
+										false,
+										'',
+										'',
+										$line->array_options,
+										$line->fk_unit
+									);
 								}
-			
+
 								if($res > 0) {
 									$countLineUpdated++;
 								} else {
@@ -253,10 +275,11 @@ class ActionsDiscount4lines
 		
 		$contexts = explode(':',$parameters['context']);
 		
-		if( in_array('propalcard',$contexts) || in_array('invoicecard',$contexts) || in_array('ordercard',$contexts) || in_array('ordersuppliercard', $contexts)) {
+		if( in_array('propalcard',$contexts) || in_array('invoicecard',$contexts) || in_array('ordercard',$contexts) || in_array('ordersuppliercard', $contexts) || in_array('invoicesuppliercard', $contexts)) {
 
 			$userHasRights = ! empty($user->rights->{$object->element}->creer);
 			if ($object->element == 'order_supplier') $userHasRights = ! empty($user->rights->fournisseur->commande->creer);
+			if ($object->element == 'invoice_supplier') $userHasRights = ! empty($user->rights->fournisseur->facture->creer);
 				
 			if ($object->statut == 0  && $userHasRights) {
 		

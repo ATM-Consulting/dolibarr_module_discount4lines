@@ -77,7 +77,7 @@ class modDiscount4lines extends DolibarrModules
 		$this->picto='generic';
 
 		$this->module_parts = array(
-			'hooks' => array('invoicecard','propalcard','ordercard','ordersuppliercard')
+			'hooks' => array('invoicecard','propalcard','ordercard','ordersuppliercard','invoicesuppliercard')
 		);
 
 		// Data directories to create when module is enabled.
