@@ -120,9 +120,8 @@ class ActionsDiscount4lines
 					
 					foreach($object->lines as $line) {
 						if(
-								   ($line->product_type != '0' && $line->product_type != '1')								// Si ni service, ni produit
-								|| ($line->product_type == '0' && $conf->global->DISCOUNT4LINES_APPLY_TO_PRODUCTS == '1')	// Si produit et qu'on applique la réduc sur les produits
-								|| ($line->product_type == '1' && $conf->global->DISCOUNT4LINES_APPLY_TO_SERVICES == '1')	// Si service et qu'on applique la réduc sur les services
+								($line->product_type == '0' && ! empty($conf->global->DISCOUNT4LINES_APPLY_TO_PRODUCTS))	// Si produit et qu'on applique la réduc sur les produits
+								|| ($line->product_type == '1' && ! empty($conf->global->DISCOUNT4LINES_APPLY_TO_SERVICES))	// Si service et qu'on applique la réduc sur les services
 						)
 						{
 							$remise_percent = GETPOST('amount_discount4lines','int');
