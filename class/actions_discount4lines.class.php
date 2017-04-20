@@ -106,6 +106,7 @@ class ActionsDiscount4lines
 		if( in_array('propalcard',$contexts) || in_array('invoicecard',$contexts)) {
 	
 			if ($object->statut == 0  && $user->rights->{$object->element}->creer) {
+				
 				if($action == 'discount4lines') {
 					
 					$countLineUpdated = 0;
@@ -117,21 +118,21 @@ class ActionsDiscount4lines
 						if($line->total_ht > 0) {
 							
 							if(in_array('propalcard',$contexts)) {
-							
+								
 								$res = $object->updateline(
 									$line->id,
-									$line->subprice,
+									isset($line->subprice) ? $line->subprice : $line->price,
 									$line->qty,
 									$remise_percent,
 									$line->tva_tx,
 									$line->localtax1_tx,
 									$line->localtax2_tx,
 									$line->desc,
-									$line->price_base_type,
+									'HT',
 									$line->infobits,
 									$line->special_code,
 									$line->fk_parent_line,
-									$line->skip_update_total,
+									0,
 									$line->fk_fournprice,
 									$line->pa_ht,
 									$line->label,
@@ -139,13 +140,14 @@ class ActionsDiscount4lines
 									$line->date_start,
 									$line->date_end,
 									$line->array_options,
-									$line->fk_unit
+									$line->fk_unit,
+									$line->multicurrency_subprice
 								);
 							} elseif(in_array('invoicecard',$contexts)) {
 								$res = $object->updateline(
 									$line->id, 
 									$line->desc, 
-									$line->subprice, 
+									isset($line->subprice) ? $line->subprice : $line->price,
 									$line->qty, 
 									$remise_percent, 
 									$line->date_start, 
@@ -153,18 +155,19 @@ class ActionsDiscount4lines
 									$line->tva_tx, 
 									$line->localtax1_tx, 
 									$line->localtax2_tx, 
-									$line->price_base_type, 
+									'HT', 
 									$line->infobits, 
 									'', // type 
 									$line->fk_parent_line, 
 									$line->skip_update_total, 
 									$line->fk_fournprice, 
-									$line->pa_ht=0, 
+									$line->pa_ht, 
 									$line->label, 
 									$line->special_code, 
 									$line->array_options,
 									$line->situation_percent,
-									$line->fk_unit
+									$line->fk_unit,
+									$line->multicurrency_subprice
 								);
 							}
 		
