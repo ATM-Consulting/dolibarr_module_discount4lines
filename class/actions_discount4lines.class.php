@@ -121,7 +121,7 @@ class ActionsDiscount4lines
 								
 								$res = $object->updateline(
 									$line->id,
-									$line->subprice,
+									isset($line->subprice) ? $line->subprice : $line->price,
 									$line->qty,
 									$remise_percent,
 									$line->tva_tx,
@@ -147,7 +147,7 @@ class ActionsDiscount4lines
 								$res = $object->updateline(
 									$line->id, 
 									$line->desc, 
-									$line->price, 
+									isset($line->subprice) ? $line->subprice : $line->price,
 									$line->qty, 
 									$remise_percent, 
 									$line->date_start, 
