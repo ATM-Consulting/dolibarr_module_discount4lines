@@ -51,9 +51,13 @@ class ActionsDiscount4lines
 
 		$contexts = explode(':',$parameters['context']);
 
-		if(in_array('propalcard',$contexts) || in_array('invoicecard',$contexts)) {
-
-			if ($object->statut == 0  && $user->rights->{$object->element}->creer) {
+		if(in_array('propalcard',$contexts) || in_array('invoicecard',$contexts) || in_array('ordercard',$contexts) || in_array('ordersuppliercard', $contexts) || in_array('invoicesuppliercard', $contexts)) {
+			
+			$userHasRights = ! empty($user->rights->{$object->element}->creer);
+			if ($object->element == 'order_supplier') $userHasRights = ! empty($user->rights->fournisseur->commande->creer);
+			if ($object->element == 'invoice_supplier') $userHasRights = ! empty($user->rights->fournisseur->facture->creer);
+			
+			if ($object->statut == 0  && $userHasRights) {
 				
 				if($action == 'ask_discount4lines') {
 					$form = new Form($this->db);
@@ -102,85 +106,161 @@ class ActionsDiscount4lines
 		$langs->load('discount4lines@discount4lines');
 	
 		$contexts = explode(':',$parameters['context']);
-	
-		if( in_array('propalcard',$contexts) || in_array('invoicecard',$contexts)) {
-	
-			if ($object->statut == 0  && $user->rights->{$object->element}->creer) {
-				
+		if( in_array('propalcard',$contexts) || in_array('invoicecard',$contexts) || in_array('ordercard', $contexts) || in_array('ordersuppliercard', $contexts) || in_array('invoicesuppliercard', $contexts)) {
+
+			$userHasRights = ! empty($user->rights->{$object->element}->creer);
+			if ($object->element == 'order_supplier') $userHasRights = ! empty($user->rights->fournisseur->commande->creer);
+			if ($object->element == 'invoice_supplier') $userHasRights = ! empty($user->rights->fournisseur->facture->creer);
+
+			if ($object->statut == 0  && $userHasRights) {
 				if($action == 'discount4lines') {
 					
 					$countLineUpdated = 0;
 					$err = 0;
 					
 					foreach($object->lines as $line) {
-						
-						$remise_percent = GETPOST('amount_discount4lines','int');
-						if($line->total_ht > 0) {
-							
-							if(in_array('propalcard',$contexts)) {
+						if(
+								($line->product_type == '0' && ! empty($conf->global->DISCOUNT4LINES_APPLY_TO_PRODUCTS))	// Si produit et qu'on applique la réduc sur les produits
+								|| ($line->product_type == '1' && ! empty($conf->global->DISCOUNT4LINES_APPLY_TO_SERVICES))	// Si service et qu'on applique la réduc sur les services
+						)
+						{
+							$remise_percent = GETPOST('amount_discount4lines','int');
+							if($line->total_ht > 0) {
 								
-								$res = $object->updateline(
-									$line->id,
+								if(in_array('propalcard',$contexts)) {
+								
+									$res = $object->updateline(
+										$line->id,
 									isset($line->subprice) ? $line->subprice : $line->price,
-									$line->qty,
-									$remise_percent,
-									$line->tva_tx,
-									$line->localtax1_tx,
-									$line->localtax2_tx,
-									$line->desc,
-									'HT',
-									$line->infobits,
-									$line->special_code,
-									$line->fk_parent_line,
-									0,
-									$line->fk_fournprice,
-									$line->pa_ht,
-									$line->label,
-									$line->product_type,
-									$line->date_start,
-									$line->date_end,
-									$line->array_options,
+										$line->qty,
+										$remise_percent,
+										$line->tva_tx,
+										$line->localtax1_tx,
+										$line->localtax2_tx,
+										$line->desc,
+										$line->price_base_type,
+										$line->infobits,
+										$line->special_code,
+										$line->fk_parent_line,
+										$line->skip_update_total,
+										$line->fk_fournprice,
+										$line->pa_ht,
+										$line->label,
+										$line->product_type,
+										$line->date_start,
+										$line->date_end,
+										$line->array_options,
 									$line->fk_unit,
 									$line->multicurrency_subprice
-								);
-							} elseif(in_array('invoicecard',$contexts)) {
-								$res = $object->updateline(
-									$line->id, 
-									$line->desc, 
+									);
+								} elseif(in_array('invoicecard',$contexts)) {
+									$res = $object->updateline(
+										$line->id, 
+										$line->desc, 
 									isset($line->subprice) ? $line->subprice : $line->price,
-									$line->qty, 
-									$remise_percent, 
-									$line->date_start, 
-									$line->date_end, 
-									$line->tva_tx, 
-									$line->localtax1_tx, 
-									$line->localtax2_tx, 
-									'HT', 
-									$line->infobits, 
-									'', // type 
-									$line->fk_parent_line, 
-									$line->skip_update_total, 
-									$line->fk_fournprice, 
-									$line->pa_ht, 
-									$line->label, 
-									$line->special_code, 
-									$line->array_options,
-									$line->situation_percent,
-									$line->fk_unit,
-									$line->multicurrency_subprice
-								);
-							}
-		
-							if($res > 0) {
-								$countLineUpdated++;
-							} else {
-								$err++;
+										$line->qty, 
+										$remise_percent, 
+										$line->date_start, 
+										$line->date_end, 
+										$line->tva_tx, 
+										$line->localtax1_tx, 
+										$line->localtax2_tx, 
+										$line->price_base_type, 
+										$line->infobits, 
+										$line->product_type, // type
+										$line->fk_parent_line, 
+										$line->skip_update_total, 
+										$line->fk_fournprice, 
+										$line->pa_ht=0, 
+										$line->label, 
+										$line->special_code, 
+										$line->array_options,
+										$line->situation_percent,
+										$line->fk_unit,
+										$line->multicurrency_subprice
+									);
+								} elseif(in_array('ordercard', $contexts)) {
+									$res = $object->updateline(
+										$line->rowid,
+										$line->desc,
+									isset($line->subprice) ? $line->subprice : $line->price,
+										$line->qty,
+										$remise_percent,
+										$line->tva_tx,
+										$line->localtax1_tx,
+										$line->localtax2_tx,
+										'HT',
+										$line->info_bits,
+										$line->date_start,
+										$line->date_end,
+										$line->product_type,
+										$line->fk_parent_line,
+										$line->skip_update_total,
+										$line->fk_fournprice,
+										$line->pa_ht,
+										$line->label,
+										$line->special_code,
+										$line->array_options,
+										$line->fk_unit
+									);
+								} elseif(in_array('ordersuppliercard', $contexts)) {
+									$res = $object->updateline(
+										$line->id,
+										$line->desc,
+										$line->pu_ht,
+										$line->qty,
+										$remise_percent,
+										$line->tva_tx,
+										$line->localtax1_tx,
+										$line->localtax2_tx,
+										'HT',
+										$line->info_bits,
+										$line->product_type,
+										false,
+										$line->date_start,
+										$line->date_end,
+										$line->array_options,
+										$line->fk_unit
+									);
+								} elseif(in_array('invoicesuppliercard', $contexts)) {
+									$res = $object->updateline(
+										$line->id,
+										$line->description,
+										$line->pu_ht,
+										$line->tva_tx,
+										$line->localtax1_tx,
+										$line->localtax2_tx,
+										$line->qty,
+										$line->fk_product,
+										'HT',
+										$line->info_bits,
+										$line->product_type,
+										$remise_percent,
+										false,
+										'',
+										'',
+										$line->array_options,
+										$line->fk_unit
+									);
+								}
+
+								if($res > 0) {
+									$countLineUpdated++;
+								} else {
+									$err++;
+								}
 							}
 						}
 					}
-					
+
 					if($countLineUpdated > 0) {
 						setEventMessage($langs->trans('Discount4linesApplied', $countLineUpdated));
+					}
+					
+					// Si commande fournisseur, il n'y a pas de redirection, donc l'affichage des lignes n'est pas mis à jour : on redirige
+					if(in_array('ordersuppliercard', $contexts)) {
+						header("Location: ".$_SERVER['PHP_SELF']."?id=".$object->id);
+						exit;
 					}
 				}
 			}
@@ -196,9 +276,13 @@ class ActionsDiscount4lines
 		
 		$contexts = explode(':',$parameters['context']);
 		
-		if( in_array('propalcard',$contexts) || in_array('invoicecard',$contexts)) {
-		
-			if ($object->statut == 0  && $user->rights->{$object->element}->creer) {
+		if( in_array('propalcard',$contexts) || in_array('invoicecard',$contexts) || in_array('ordercard',$contexts) || in_array('ordersuppliercard', $contexts) || in_array('invoicesuppliercard', $contexts)) {
+
+			$userHasRights = ! empty($user->rights->{$object->element}->creer);
+			if ($object->element == 'order_supplier') $userHasRights = ! empty($user->rights->fournisseur->commande->creer);
+			if ($object->element == 'invoice_supplier') $userHasRights = ! empty($user->rights->fournisseur->facture->creer);
+				
+			if ($object->statut == 0  && $userHasRights) {
 		
 				$out = '<div class="inline-block divButAction"><a class="butAction" href="' . $_SERVER["PHP_SELF"] . '?id=' . $object->id . '&amp;action=ask_discount4lines">' . $langs->trans('BtnDiscount4Lines') . '</a></div>';
 			

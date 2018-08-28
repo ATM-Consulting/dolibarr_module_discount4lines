@@ -10,3 +10,8 @@ BtnDiscount4Lines = Remise sur lignes
 ApplyDiscount4linesTitle = Appliquer une remise sur les lignes
 EnterDiscountToApplyToEachLines = Saisir le pourcentage à appliquer sur chaque ligne
 Discount4linesApplied = Remise appliquée sur %s lignes
+
+#Conf
+discount4linesSetup = Configuration du module Discount4Lines
+APPLY_TO_PRODUCTS=Appliquer la remise aux lignes produits
+APPLY_TO_SERVICES=Appliquer la remise aux lignes services

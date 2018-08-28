@@ -77,7 +77,7 @@ class modDiscount4lines extends DolibarrModules
 		$this->picto='generic';
 
 		$this->module_parts = array(
-			'hooks' => array('invoicecard','propalcard')
+			'hooks' => array('invoicecard','propalcard','ordercard','ordersuppliercard','invoicesuppliercard')
 		);
 
 		// Data directories to create when module is enabled.
@@ -85,7 +85,7 @@ class modDiscount4lines extends DolibarrModules
 		$this->dirs = array();
 
 		// Config pages. Put here list of php page, stored into discount4lines/admin directory, to use to setup module.
-		//$this->config_page_url = array("");
+		$this->config_page_url = array("discount4lines_setup.php@discount4lines");
 
 		// Dependencies
 		$this->hidden = false;			// A condition to hide module
@@ -97,7 +97,10 @@ class modDiscount4lines extends DolibarrModules
 		$this->langfiles = array("discount4lines@discount4lines");
 
 		// Constants
-		$this->const = array();
+		$this->const = array(
+				0 => array('DISCOUNT4LINES_APPLY_TO_PRODUCTS', 'chaine', 1, '', 1, 'current', 0)
+				,1 => array('DISCOUNT4LINES_APPLY_TO_SERVICES', 'chaine', 1, '', 1, 'current', 0)
+		);
 
 		$this->tabs = array();
 
