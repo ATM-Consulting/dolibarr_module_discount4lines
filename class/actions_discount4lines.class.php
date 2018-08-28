@@ -131,7 +131,7 @@ class ActionsDiscount4lines
 								
 									$res = $object->updateline(
 										$line->id,
-										$line->subprice,
+									isset($line->subprice) ? $line->subprice : $line->price,
 										$line->qty,
 										$remise_percent,
 										$line->tva_tx,
@@ -150,13 +150,14 @@ class ActionsDiscount4lines
 										$line->date_start,
 										$line->date_end,
 										$line->array_options,
-										$line->fk_unit
+									$line->fk_unit,
+									$line->multicurrency_subprice
 									);
 								} elseif(in_array('invoicecard',$contexts)) {
 									$res = $object->updateline(
 										$line->id, 
 										$line->desc, 
-										$line->subprice, 
+									isset($line->subprice) ? $line->subprice : $line->price,
 										$line->qty, 
 										$remise_percent, 
 										$line->date_start, 
@@ -175,13 +176,14 @@ class ActionsDiscount4lines
 										$line->special_code, 
 										$line->array_options,
 										$line->situation_percent,
-										$line->fk_unit
+										$line->fk_unit,
+										$line->multicurrency_subprice
 									);
 								} elseif(in_array('ordercard', $contexts)) {
 									$res = $object->updateline(
 										$line->rowid,
 										$line->desc,
-										$line->subprice,
+									isset($line->subprice) ? $line->subprice : $line->price,
 										$line->qty,
 										$remise_percent,
 										$line->tva_tx,
